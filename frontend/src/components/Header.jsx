@@ -7,8 +7,11 @@ import { Helmet } from "react-helmet";
 import PropTypes from "prop-types";
 import { useSubdomain } from "../context/SubdomainContext";
 
+import { useNavigate } from 'react-router-dom';
+
 const Header = () => {
   const subdomain = useSubdomain();
+  const navigate = useNavigate()
   return (
     <AppBar position="static">
       <Helmet>
@@ -28,12 +31,12 @@ const Header = () => {
             </Box>
           </Grid>
           <Grid item>
-            <Button color="inherit">Cases</Button>
+            <Button color="inherit" onClick={() => navigate("/cases")}>Cases</Button>
             <Button color="inherit">Journal</Button>
           </Grid>
           <Grid item xs />
           <Grid item>
-            <Button color="inherit">Log in</Button>
+            <Button color="inherit" onClick={() => navigate("/signup")}>Sign up</Button>
           </Grid>
         </Grid>
       </Toolbar>

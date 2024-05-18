@@ -9,10 +9,10 @@ import { SubdomainProvider } from "./context/SubdomainProvider";
 
 // ROUTES
 import Root from "./routes/Root";
-
-// CO
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Cases from "./routes/Cases";
+import SignIn from "./routes/SignIn";
+import SignUp from "./routes/SignUp";
+import Case from "./routes/Case";
 
 // Firebase
 import './firebaseConfig';
@@ -21,6 +21,12 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    children: [
+      { path: "cases", element: <Cases /> },
+      { path: "signin", element: <SignIn /> },
+      { path: "signup", element: <SignUp /> },
+      { path: "case/:id", element: <Case /> },
+    ],
   },
 ]);
 
@@ -28,9 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <CssBaseline />
     <SubdomainProvider>
-      <Header />
       <RouterProvider router={router} />
-      <Footer />
     </SubdomainProvider>
   </React.StrictMode>
 );
