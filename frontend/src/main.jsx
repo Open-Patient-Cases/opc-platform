@@ -14,6 +14,8 @@ import SignIn from "./routes/SignIn";
 import SignUp from "./routes/SignUp";
 import Case from "./routes/Case";
 
+import MainContent from "./components/MainContent";
+
 // Firebase
 import './firebaseConfig';
 
@@ -22,6 +24,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     children: [
+      { path: "/", element: <MainContent /> },
       { path: "cases", element: <Cases /> },
       { path: "signin", element: <SignIn /> },
       { path: "signup", element: <SignUp /> },
