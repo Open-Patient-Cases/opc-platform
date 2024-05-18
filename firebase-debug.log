@@ -1,0 +1,21 @@
+[debug] [2024-05-18T18:09:59.485Z] ----------------------------------------------------------------------
+[debug] [2024-05-18T18:09:59.487Z] Command:       /Users/martinkjellberg/.nvm/versions/node/v21.7.3/bin/node /Users/martinkjellberg/.nvm/versions/node/v21.7.3/bin/firebase init
+[debug] [2024-05-18T18:09:59.487Z] CLI Version:   13.7.3
+[debug] [2024-05-18T18:09:59.487Z] Platform:      darwin
+[debug] [2024-05-18T18:09:59.487Z] Node Version:  v21.7.3
+[debug] [2024-05-18T18:09:59.487Z] Time:          Sat May 18 2024 11:09:59 GMT-0700 (Pacific Daylight Time)
+[debug] [2024-05-18T18:09:59.487Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-05-18T18:09:59.491Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-05-18T18:09:59.491Z] > authorizing via signed-in user (mkjberg@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/martinkjellberg/dev/stanford/opc-platform
+
