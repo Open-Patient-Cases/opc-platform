@@ -10,6 +10,9 @@ import { SubdomainProvider } from "./context/SubdomainProvider";
 // ROUTES
 import Root from "./routes/Root";
 
+// Firebase
+import './firebaseConfig';
+
 const router = createBrowserRouter([
   {
     path: "/",

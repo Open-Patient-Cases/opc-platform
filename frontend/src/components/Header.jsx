@@ -8,18 +8,19 @@ import { useSubdomain } from "../context/SubdomainContext";
 
 const Header = () => {
   const subdomain = useSubdomain();
+  console.log(subdomain);
   return (
     <AppBar position="static">
       <Toolbar>
         <Helmet>
           <title>
             {subdomain
-              ? `${subdomain} - Research to the People`
+              ? `${subdomain.name}`
               : "Research to the People"}
           </title>
         </Helmet>
         <Typography variant="h6" style={{ flexGrow: 1 }}>
-          {subdomain} Research to the People
+          {subdomain.name}
         </Typography>
         <Button color="inherit">Cases</Button>
         <Button color="inherit">Journal</Button>
