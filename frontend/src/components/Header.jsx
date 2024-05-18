@@ -8,7 +8,6 @@ import { useSubdomain } from "../context/SubdomainContext";
 
 const Header = () => {
   const subdomain = useSubdomain();
-  console.log("Use SUBDOMAIN", subdomain);
   return (
     <AppBar position="static">
       <Toolbar>

@@ -3,7 +3,7 @@ import { db } from '../firebaseConfig';
 
 export async function fetchInstitutionBySubdomain(subdomain) {
   const institutionsRef = collection(db, 'institutions');
-  const q = query(institutionsRef, where('subdomain', '==', subdomain));
+  const q = query(institutionsRef, where('urls', 'array-contains', subdomain));
 
   try {
     const querySnapshot = await getDocs(q);

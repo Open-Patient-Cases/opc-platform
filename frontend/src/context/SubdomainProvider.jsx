@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { getSubdomain } from "../utils/subdomain";
 import SubdomainContext from "./SubdomainContext";
 
 import { fetchInstitutionBySubdomain } from '../utils/firebase';
@@ -8,14 +7,12 @@ import { fetchInstitutionBySubdomain } from '../utils/firebase';
 export const SubdomainProvider = ({ children }) => {
   const [subdomainData, setSubdomainData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const subdomain = getSubdomain();
 
   useEffect(() => {
     const fetchData = async () => {
-      const subdomain = getSubdomain();
-      if (subdomain) {
+      if (window.location.hostname) {
         try {
-          const data = await fetchInstitutionBySubdomain(subdomain);
+          const data = await fetchInstitutionBySubdomain(window.location.hostname);
           setSubdomainData(data);
         } catch (error) {
           console.error("Error fetching subdomain data:", error);
@@ -27,7 +24,7 @@ export const SubdomainProvider = ({ children }) => {
       }
     };
     fetchData();
-  }, [subdomain]);
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
