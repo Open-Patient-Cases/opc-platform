@@ -1,5 +1,22 @@
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+
+export async function fetchUserDoc(uid) {
+  try {
+    const userDocRef = doc(db, 'users', uid);
+    const querySnapshot = await getDoc(userDocRef);
+
+    if (querySnapshot.exists()) {
+      return querySnapshot.data();
+    } else {
+      console.log('No matching documents.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
+  }
+}
 
 export async function fetchInstitutionBySubdomain(subdomain) {
   const institutionsRef = collection(db, 'institutions');

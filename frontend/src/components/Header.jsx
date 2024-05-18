@@ -23,7 +23,7 @@ const Header = () => {
       <Toolbar>
         <Grid container alignItems="center">
           <Grid item>
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" onClick={() => navigate("/")}>
               <img
                 src={subdomainData.logo}
                 alt="Logo"
@@ -38,7 +38,7 @@ const Header = () => {
           <Grid item xs />
           <Grid item>
             {
-              user ? <Avatar src={user.photoURL} /> : <Button color="inherit" onClick={() => navigate("/signin")}>Sign In</Button>
+              user ? <Avatar src={user.photoURL} onClick={() => navigate("/signup")} /> : <Button color="inherit" onClick={() => navigate("/signin")}>Sign In</Button>
             }
           </Grid>
         </Grid>

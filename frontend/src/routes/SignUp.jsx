@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Button,
   TextField,
@@ -11,8 +11,12 @@ import {
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth, storage } from "../firebaseConfig";
+import { useSubdomain } from "../context/SubdomainContext";
+
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -71,6 +75,14 @@ export default function SignUp() {
       console.error("Error signing up:", error);
     }
   };
+
+  const { userData } = useSubdomain();
+    const navigate = useNavigate();
+  useEffect(() => {
+    if (userData === null) {
+        navigate("/complete-profile")
+    }
+  }, [navigate, userData]);
 
   return (
     <Container component="main" maxWidth="xs">
