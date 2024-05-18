@@ -1,18 +1,28 @@
-import { useState, useRef } from 'react';
-import { Button, TextField, Grid, Container, Typography, Avatar, Box } from '@mui/material';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { auth, storage } from '../firebaseConfig';
+import { useState, useRef } from "react";
+import {
+  Button,
+  TextField,
+  Grid,
+  Container,
+  Typography,
+  Avatar,
+  Box,
+} from "@mui/material";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { auth, storage } from "../firebaseConfig";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
     profilePicture: null,
-    profilePicturePreview: '',
+    profilePicturePreview: "",
   });
+
+  const [error, setError] = useState("");
 
   const fileInputRef = useRef(null);
 
@@ -36,10 +46,14 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
       const user = userCredential.user;
 
-      let photoURL = '';
+      let photoURL = "";
       if (formData.profilePicture) {
         const profilePictureRef = ref(storage, `profilePictures/${user.uid}`);
         await uploadBytes(profilePictureRef, formData.profilePicture);
@@ -51,9 +65,10 @@ export default function SignUp() {
         photoURL: photoURL,
       });
 
-      console.log('User signed up and profile updated:', user);
+      console.log("User signed up and profile updated:", user);
     } catch (error) {
-      console.error('Error signing up:', error);
+      setError(error.message);
+      console.error("Error signing up:", error);
     }
   };
 
@@ -62,9 +77,9 @@ export default function SignUp() {
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Typography component="h1" variant="h5">
@@ -72,7 +87,14 @@ export default function SignUp() {
         </Typography>
         <Avatar
           src={formData.profilePicturePreview}
-          sx={{ width: 100, height: 100, marginTop: 2, marginBottom: 2, borderRadius: 2, cursor: 'pointer' }}
+          sx={{
+            width: 100,
+            height: 100,
+            marginTop: 2,
+            marginBottom: 2,
+            borderRadius: 2,
+            cursor: "pointer",
+          }}
           onClick={() => fileInputRef.current.click()}
         />
         <input
@@ -82,6 +104,16 @@ export default function SignUp() {
           name="profilePicture"
           onChange={handleChange}
         />
+        {error && (
+          <Typography
+            color="error"
+            variant="body2"
+            align="center"
+            sx={{ mt: 2 }}
+          >
+            {error}
+          </Typography>
+        )}
         <form onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -146,7 +178,7 @@ export default function SignUp() {
             color="primary"
             sx={{ marginTop: 3 }}
           >
-            Sign Up
+            Continue
           </Button>
         </form>
       </Box>

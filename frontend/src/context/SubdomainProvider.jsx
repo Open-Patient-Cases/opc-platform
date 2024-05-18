@@ -4,9 +4,26 @@ import SubdomainContext from "./SubdomainContext";
 
 import { fetchInstitutionBySubdomain } from '../utils/firebase';
 
+import { auth } from '../firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
+
 export const SubdomainProvider = ({ children }) => {
   const [subdomainData, setSubdomainData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      if (user) {
+        // User is signed in, update state or fetch additional user data if needed
+      } else {
+        // User is signed out, handle state change if needed
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +48,7 @@ export const SubdomainProvider = ({ children }) => {
   }
 
   return (
-    <SubdomainContext.Provider value={subdomainData}>
+    <SubdomainContext.Provider value={{ subdomainData, user }}>
       {children}
     </SubdomainContext.Provider>
   );

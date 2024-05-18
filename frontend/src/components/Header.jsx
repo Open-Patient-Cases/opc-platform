@@ -3,6 +3,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
 import { Helmet } from "react-helmet";
 import PropTypes from "prop-types";
 import { useSubdomain } from "../context/SubdomainContext";
@@ -10,13 +11,13 @@ import { useSubdomain } from "../context/SubdomainContext";
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const subdomain = useSubdomain();
+  const { subdomainData, user } = useSubdomain();
   const navigate = useNavigate()
   return (
     <AppBar position="static">
       <Helmet>
         <title>
-          {subdomain ? `${subdomain.name}` : "Research to the People"}
+          {subdomainData ? `${subdomainData.name}` : "Research to the People"}
         </title>
       </Helmet>
       <Toolbar>
@@ -24,7 +25,7 @@ const Header = () => {
           <Grid item>
             <Box display="flex" alignItems="center">
               <img
-                src={subdomain.logo}
+                src={subdomainData.logo}
                 alt="Logo"
                 style={{ height: 40, marginRight: 16 }}
               />
@@ -36,7 +37,9 @@ const Header = () => {
           </Grid>
           <Grid item xs />
           <Grid item>
-            <Button color="inherit" onClick={() => navigate("/signup")}>Sign up</Button>
+            {
+              user ? <Avatar src={user.photoURL} /> : <Button color="inherit" onClick={() => navigate("/signin")}>Sign In</Button>
+            }
           </Grid>
         </Grid>
       </Toolbar>
