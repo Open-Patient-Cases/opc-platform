@@ -13,6 +13,7 @@ import Cases from "./routes/Cases";
 import SignIn from "./routes/SignIn";
 import SignUp from "./routes/SignUp";
 import Case from "./routes/Case";
+import Profile from "./routes/Profile";
 
 import MainContent from "./components/MainContent";
 
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       { path: "signin", element: <SignIn /> },
       { path: "signup", element: <SignUp /> },
       { path: "case/:id", element: <Case /> },
+      { path: "profile", element: <Profile /> },
     ],
   },
 ]);

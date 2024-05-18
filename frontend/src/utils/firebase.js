@@ -1,5 +1,21 @@
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../firebaseConfig';
+
+export const saveUserProfile = async (profileData) => {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error('User is not authenticated');
+  }
+
+  const userRef = doc(db, 'users', user.uid);
+  try {
+    await setDoc(userRef, profileData, { merge: true });
+    console.log('Profile data successfully saved');
+  } catch (error) {
+    console.error('Error saving profile data:', error);
+    throw new Error('Error saving profile data');
+  }
+};
 
 export async function fetchUserDoc(uid) {
   try {

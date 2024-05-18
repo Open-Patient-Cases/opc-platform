@@ -76,13 +76,15 @@ export default function SignUp() {
     }
   };
 
-  const { userData } = useSubdomain();
+  const { userData, user } = useSubdomain();
     const navigate = useNavigate();
   useEffect(() => {
     if (userData === null) {
         navigate("/complete-profile")
+    } else if (user) {
+        navigate("/")
     }
-  }, [navigate, userData]);
+  }, [navigate, userData, user]);
 
   return (
     <Container component="main" maxWidth="xs">
