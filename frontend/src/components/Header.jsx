@@ -38,7 +38,7 @@ const Header = () => {
           <Grid item xs />
           <Grid item>
             {
-              user ? <Avatar src={user.photoURL} onClick={() => navigate("/profile")} /> : <Button color="inherit" onClick={() => navigate("/signin")}>Sign In</Button>
+              user ? <Avatar src={user.photoURL} onClick={() => navigate("/profile")} /> : <Button color="inherit" onClick={() => navigate("/signup")}>Sign Up</Button>
             }
           </Grid>
         </Grid>

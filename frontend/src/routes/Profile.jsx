@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, Grid, Box, IconButton } from '@mui/material';
+import { Container, Typography, TextField, Button, Grid, Box, IconButton, Paper, Avatar } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { Formik, FieldArray, Form } from 'formik';
 import * as Yup from 'yup';
@@ -44,15 +44,34 @@ export default function Profile() {
     }
   };
 
-  const { userData } = useSubdomain();
+  const { userData, user } = useSubdomain();
   useEffect(() => {
-    console.log(userData)
-    setInitialValues(userData)
+    if (userData) {
+      setInitialValues(userData)
+    }
     }, [userData]);
   
 
   return (
     <Container component="main" maxWidth="sm">
+      <Box p={2} display="flex" justifyContent="center" alignItems="center">
+        <Paper>
+          <Box p={2} textAlign="center">
+            <Avatar
+              alt={user.displayName}
+              src={user.photoURL}
+              sx={{ width: 100, height: 100, margin: '0 auto' }}
+            />
+            <Typography variant="h4" gutterBottom>
+              {user.displayName}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {user.email}
+            </Typography>
+          </Box>
+        </Paper>
+      </Box>
+      
       <Box sx={{ mt: 4 }}>
         <Typography component="h1" variant="h5" gutterBottom>
           Professional
