@@ -13,7 +13,7 @@ const Header = () => {
   const subdomain = useSubdomain();
   const navigate = useNavigate()
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Helmet>
         <title>
           {subdomain ? `${subdomain.name}` : "Research to the People"}

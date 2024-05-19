@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 export async function fetchInstitutionBySubdomain(subdomain) {
@@ -20,5 +20,22 @@ export async function fetchInstitutionBySubdomain(subdomain) {
   } catch (error) {
     console.error('Error fetching data:', error);
     return null;
+  }
+}
+
+export async function fetchCaseByCaseId(caseId) {
+  try {
+    const caseDocRef = doc(db, 'cases', caseId);
+    const querySnapshot = await getDoc(caseDocRef);
+
+    if (querySnapshot.exists()) {
+      return querySnapshot.data();
+    } else {
+      // No matching document found
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching case details:', error);
+    throw new Error('Unable to retrieve case data');
   }
 }
