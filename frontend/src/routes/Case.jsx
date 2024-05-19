@@ -11,7 +11,6 @@ import {
     ListItemText,
     Divider,
     Grid,
-    Toolbar,
     Hidden,
     Avatar,
     Typography,
@@ -60,7 +59,6 @@ export default function Case() {
                             [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' }
                         }}
                     >
-                        <Toolbar />
                         <Divider />
                         <List>
                             <ListItem button>
@@ -81,8 +79,6 @@ export default function Case() {
                         p: 3,
                     }}
                 >
-                    {/* this is for vertical spacing */}
-                    <Toolbar />
 
                     <Grid container spacing={3}>
 
