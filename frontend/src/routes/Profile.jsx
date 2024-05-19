@@ -77,14 +77,14 @@ export default function Profile() {
   function apply() {
     addApplication(user.uid, subdomainData.id);
   }
-  const [applicationData, setApplicationData] = useState(null);
+  const [applicationData, setApplicationData] = useState('loading');
   useEffect(() => {
     if (user) {
       const unsubscribe = listenToApplicationData(
         subdomainData.id,
         user.uid,
         setApplicationData
-      ); // Replace 'institutionId' with the actual institution ID
+      );
       return () => unsubscribe(); // Cleanup subscription on unmount
     }
   }, [subdomainData, user]);
@@ -110,7 +110,7 @@ export default function Profile() {
 
   return (
     <Container component="main" maxWidth="sm">
-      {!applicationData && applyComponent}
+      {applicationData === null && applyComponent}
       {applicationData && applicationData.status == "pending" && (
         <Box p={2}>
           <Alert icon={<Notifications fontSize="inherit" />} severity="info">
