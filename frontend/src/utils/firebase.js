@@ -83,3 +83,20 @@ export async function fetchInstitutionBySubdomain(subdomain) {
     return null;
   }
 }
+
+export async function fetchCaseByCaseId(caseId) {
+  try {
+    const caseDocRef = doc(db, 'cases', caseId);
+    const querySnapshot = await getDoc(caseDocRef);
+
+    if (querySnapshot.exists()) {
+      return querySnapshot.data();
+    } else {
+      // No matching document found
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching case details:', error);
+    throw new Error('Unable to retrieve case data');
+  }
+}
