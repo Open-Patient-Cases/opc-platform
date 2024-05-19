@@ -14,7 +14,11 @@ import {
 import { Delete, Notifications } from "@mui/icons-material";
 import { Formik, FieldArray, Form } from "formik";
 import * as Yup from "yup";
-import { saveUserProfile, addApplication, listenToApplicationData } from "../utils/firebase"; // Import the utility function
+import {
+  saveUserProfile,
+  addApplication,
+  listenToApplicationData,
+} from "../utils/firebase"; // Import the utility function
 import { useSubdomain } from "../context/SubdomainContext";
 
 const validationSchema = Yup.object().shape({
@@ -78,7 +82,11 @@ export default function Profile() {
   const [applicationData, setApplicationData] = useState(null);
   useEffect(() => {
     if (user) {
-      const unsubscribe = listenToApplicationData(subdomainData.id, user.uid, setApplicationData); // Replace 'institutionId' with the actual institution ID
+      const unsubscribe = listenToApplicationData(
+        subdomainData.id,
+        user.uid,
+        setApplicationData
+      ); // Replace 'institutionId' with the actual institution ID
       return () => unsubscribe(); // Cleanup subscription on unmount
     }
   }, [subdomainData, user]);
@@ -86,8 +94,7 @@ export default function Profile() {
   const applyComponent = !complete ? (
     <Box p={2}>
       <Alert icon={<Notifications fontSize="inherit" />} severity="warning">
-        Your profile is incomplete. Please fill in the required fields to
-        apply.
+        Your profile is incomplete. Please fill in the required fields to apply.
       </Alert>
     </Box>
   ) : (
@@ -106,14 +113,13 @@ export default function Profile() {
   return (
     <Container component="main" maxWidth="sm">
       {!applicationData && applyComponent}
-      {
-        (applicationData && applicationData.status == "pending") && 
+      {applicationData && applicationData.status == "pending" && (
         <Box p={2}>
           <Alert icon={<Notifications fontSize="inherit" />} severity="info">
             Waiting for approval
           </Alert>
         </Box>
-      }
+      )}
       <Box p={2} display="flex" justifyContent="center" alignItems="center">
         <Paper>
           <Box p={2} textAlign="center">
