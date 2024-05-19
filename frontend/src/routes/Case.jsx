@@ -129,7 +129,7 @@ export default function Case() {
                                             </Typography>
                                         </Box>
                                         <Typography variant="body1" textAlign="center top">
-                                            <Box sx={{ width: 1 }}>  <strong>Years in Research:</strong></Box> {caseDetails?.patient?.yearsInResearch}
+                                            <Box sx={{ width: 1 }}>  <strong>Years in Research:</strong></Box> {caseDetails?.yearsInResearch}
                                         </Typography>
                                     </Box>
                                 </CardContent>
