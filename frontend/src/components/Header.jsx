@@ -4,14 +4,18 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
 import { Helmet } from "react-helmet";
 import PropTypes from "prop-types";
 import { useSubdomain } from "../context/SubdomainContext";
 
 import { useNavigate } from 'react-router-dom';
+import { Circle } from "@mui/icons-material";
 
 const Header = () => {
-  const { subdomainData, user } = useSubdomain();
+  const { subdomainData, user, userData } = useSubdomain();
+  const complete = (userData.institution ? userData.institution.length : false > 0 && userData.position ? userData.position.length > 0 : false)
+
   const navigate = useNavigate()
   return (
     <AppBar position="static">
@@ -38,7 +42,18 @@ const Header = () => {
           <Grid item xs />
           <Grid item>
             {
-              user ? <Avatar src={user.photoURL} onClick={() => navigate("/profile")} /> : <Button color="inherit" onClick={() => navigate("/signup")}>Sign Up</Button>
+              user ?
+              (!complete ? <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                badgeContent={
+                  <Circle sx={{ color: "red" }} />
+                }
+              >
+                <Avatar src={user.photoURL} onClick={() => navigate("/profile")} /> 
+              </Badge> : <Avatar src={user.photoURL} onClick={() => navigate("/profile")} />)
+              :
+              <Button color="inherit" onClick={() => navigate("/signup")}>Sign Up</Button>
             }
           </Grid>
         </Grid>

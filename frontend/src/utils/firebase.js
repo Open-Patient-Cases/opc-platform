@@ -1,5 +1,33 @@
-import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
+
+
+export const addApplication = async (uid, institutionId) => {
+  const applicationRef = doc(db, `institutions/${institutionId}/applications/${uid}`);
+  const userRef = doc(db, 'users', uid);
+
+  try {
+    await setDoc(applicationRef, { userRef: userRef.path, status: 'pending' }, { merge: true });
+    console.log('Application reference successfully saved');
+  } catch (error) {
+    console.error('Error saving application reference:', error);
+    throw new Error('Error saving application reference');
+  }
+};
+
+export const listenToApplicationData = (institutionId, uid, onUpdate) => {
+  const applicationRef = doc(db, `institutions/${institutionId}/applications/${uid}`);
+
+  const unsubscribe = onSnapshot(applicationRef, (doc) => {
+    if (doc.exists()) {
+      onUpdate(doc.data());
+    } else {
+      onUpdate(null);
+    }
+  });
+
+  return unsubscribe;
+};
 
 export const saveUserProfile = async (profileData) => {
   const user = auth.currentUser;

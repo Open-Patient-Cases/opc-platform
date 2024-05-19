@@ -1,66 +1,126 @@
-import { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, Grid, Box, IconButton, Paper, Avatar } from '@mui/material';
-import { Delete } from '@mui/icons-material';
-import { Formik, FieldArray, Form } from 'formik';
-import * as Yup from 'yup';
-import { saveUserProfile } from '../utils/firebase'; // Import the utility function
-import { useSubdomain } from '../context/SubdomainContext';
+import { useEffect, useState } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Box,
+  IconButton,
+  Paper,
+  Avatar,
+  Alert,
+} from "@mui/material";
+import { Delete, Notifications } from "@mui/icons-material";
+import { Formik, FieldArray, Form } from "formik";
+import * as Yup from "yup";
+import { saveUserProfile, addApplication, listenToApplicationData } from "../utils/firebase"; // Import the utility function
+import { useSubdomain } from "../context/SubdomainContext";
 
 const validationSchema = Yup.object().shape({
-  institution: Yup.string().required('Institution/Organization is required'),
-  position: Yup.string().required('Position is required'),
-  linkedin: Yup.string().url('Invalid URL'),
-  degrees: Yup.array().of(
-    Yup.object().shape({
-      university: Yup.string().required('University is required'),
-      specialty: Yup.string().required('Specialty is required'),
-      startYear: Yup.string().optional('Start year'),
-      endYear: Yup.string().optional('End year'),
-    })
-  ).min(1, 'At least one degree is required'),
-  professionalEmail: Yup.string().email('Invalid email').required('Professional email is required'),
-  phoneNumber: Yup.string().required('Phone number is required'),
+  institution: Yup.string().required("Institution/Organization is required"),
+  position: Yup.string().required("Position is required"),
+  linkedin: Yup.string().url("Invalid URL"),
+  degrees: Yup.array()
+    .of(
+      Yup.object().shape({
+        university: Yup.string(),
+        specialty: Yup.string(),
+        startYear: Yup.string(),
+        endYear: Yup.string(),
+      })
+    )
+    .min(1, "At least one degree is required"),
+  professionalEmail: Yup.string()
+    .email("Invalid email")
+    .required("Professional email is required"),
+  phoneNumber: Yup.string().required("Phone number is required"),
 });
 
 export default function Profile() {
-    const [initialValues, setInitialValues] = useState({
-        institution: '',
-        position: '',
-        linkedin: '',
-        degrees: [{ university: '', specialty: '', startMonth: '', startYear: '' }],
-        professionalEmail: '',
-        phoneNumber: '',
-      });
+  const [initialValues, setInitialValues] = useState({
+    institution: "",
+    position: "",
+    linkedin: "",
+    degrees: [{ university: "", specialty: "", startMonth: "", startYear: "" }],
+    professionalEmail: "",
+    phoneNumber: "",
+  });
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
       await saveUserProfile(values);
-      console.log('Profile data successfully saved');
+      console.log("Profile data successfully saved");
     } catch (error) {
-      console.error('Error saving profile data:', error);
+      console.error("Error saving profile data:", error);
       setErrors({ submit: error.message });
     } finally {
       setSubmitting(false);
     }
   };
 
-  const { userData, user } = useSubdomain();
+  const { userData, user, subdomainData } = useSubdomain();
   useEffect(() => {
     if (userData) {
-      setInitialValues(userData)
+      setInitialValues(userData);
     }
-    }, [userData]);
-  
+  }, [userData]);
+
+  const complete = userData.institution
+    ? userData.institution.length
+    : false > 0 && userData.position
+    ? userData.position.length > 0
+    : false;
+
+  function apply() {
+    addApplication(user.uid, subdomainData.id);
+  }
+  const [applicationData, setApplicationData] = useState(null);
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = listenToApplicationData(subdomainData.id, user.uid, setApplicationData); // Replace 'institutionId' with the actual institution ID
+      return () => unsubscribe(); // Cleanup subscription on unmount
+    }
+  }, [subdomainData, user]);
+
+  const applyComponent = !complete ? (
+    <Box p={2}>
+      <Alert icon={<Notifications fontSize="inherit" />} severity="warning">
+        Your profile is incomplete. Please fill in the required fields to
+        apply.
+      </Alert>
+    </Box>
+  ) : (
+    <Box p={2}>
+      <Button
+        variant="outlined"
+        color="primary"
+        fullWidth
+        onClick={() => apply()}
+      >
+        Apply
+      </Button>
+    </Box>
+  );
 
   return (
     <Container component="main" maxWidth="sm">
+      {!applicationData && applyComponent}
+      {
+        (applicationData && applicationData.status == "pending") && 
+        <Box p={2}>
+          <Alert icon={<Notifications fontSize="inherit" />} severity="info">
+            Waiting for approval
+          </Alert>
+        </Box>
+      }
       <Box p={2} display="flex" justifyContent="center" alignItems="center">
         <Paper>
           <Box p={2} textAlign="center">
             <Avatar
               alt={user.displayName}
               src={user.photoURL}
-              sx={{ width: 100, height: 100, margin: '0 auto' }}
+              sx={{ width: 100, height: 100, margin: "0 auto" }}
             />
             <Typography variant="h4" gutterBottom>
               {user.displayName}
@@ -71,7 +131,7 @@ export default function Profile() {
           </Box>
         </Paper>
       </Box>
-      
+
       <Box sx={{ mt: 4 }}>
         <Typography component="h1" variant="h5" gutterBottom>
           Professional
@@ -82,7 +142,14 @@ export default function Profile() {
           onSubmit={handleSubmit}
           enableReinitialize
         >
-          {({ values, errors, touched, handleChange, handleBlur, isSubmitting }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            isSubmitting,
+          }) => (
             <Form>
               <TextField
                 variant="outlined"
@@ -128,7 +195,12 @@ export default function Profile() {
                 helperText={touched.linkedin && errors.linkedin}
               />
 
-              <Typography component="h1" variant="h5" gutterBottom sx={{ mt: 4 }}>
+              <Typography
+                component="h1"
+                variant="h5"
+                gutterBottom
+                sx={{ mt: 4 }}
+              >
                 Education
               </Typography>
               <FieldArray name="degrees">
@@ -159,8 +231,14 @@ export default function Profile() {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={degree.university}
-                          error={touched.degrees?.[index]?.university && Boolean(errors.degrees?.[index]?.university)}
-                          helperText={touched.degrees?.[index]?.university && errors.degrees?.[index]?.university}
+                          error={
+                            touched.degrees?.[index]?.university &&
+                            Boolean(errors.degrees?.[index]?.university)
+                          }
+                          helperText={
+                            touched.degrees?.[index]?.university &&
+                            errors.degrees?.[index]?.university
+                          }
                         />
                         <TextField
                           variant="outlined"
@@ -173,8 +251,14 @@ export default function Profile() {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={degree.specialty}
-                          error={touched.degrees?.[index]?.specialty && Boolean(errors.degrees?.[index]?.specialty)}
-                          helperText={touched.degrees?.[index]?.specialty && errors.degrees?.[index]?.specialty}
+                          error={
+                            touched.degrees?.[index]?.specialty &&
+                            Boolean(errors.degrees?.[index]?.specialty)
+                          }
+                          helperText={
+                            touched.degrees?.[index]?.specialty &&
+                            errors.degrees?.[index]?.specialty
+                          }
                         />
                         <Grid container spacing={2}>
                           <Grid item xs={6}>
@@ -189,8 +273,14 @@ export default function Profile() {
                               onChange={handleChange}
                               onBlur={handleBlur}
                               value={degree.startYear}
-                              error={touched.degrees?.[index]?.startYear && Boolean(errors.degrees?.[index]?.startYear)}
-                              helperText={touched.degrees?.[index]?.startYear && errors.degrees?.[index]?.startYear}
+                              error={
+                                touched.degrees?.[index]?.startYear &&
+                                Boolean(errors.degrees?.[index]?.startYear)
+                              }
+                              helperText={
+                                touched.degrees?.[index]?.startYear &&
+                                errors.degrees?.[index]?.startYear
+                              }
                             />
                           </Grid>
                           <Grid item xs={6}>
@@ -205,8 +295,14 @@ export default function Profile() {
                               onChange={handleChange}
                               onBlur={handleBlur}
                               value={degree.endYear}
-                              error={touched.degrees?.[index]?.endYear && Boolean(errors.degrees?.[index]?.endYear)}
-                              helperText={touched.degrees?.[index]?.endYear && errors.degrees?.[index]?.endYear}
+                              error={
+                                touched.degrees?.[index]?.endYear &&
+                                Boolean(errors.degrees?.[index]?.endYear)
+                              }
+                              helperText={
+                                touched.degrees?.[index]?.endYear &&
+                                errors.degrees?.[index]?.endYear
+                              }
                             />
                           </Grid>
                         </Grid>
@@ -217,7 +313,14 @@ export default function Profile() {
                       fullWidth
                       variant="outlined"
                       color="primary"
-                      onClick={() => push({ university: '', specialty: '', startYear: '', endYear: '' })}
+                      onClick={() =>
+                        push({
+                          university: "",
+                          specialty: "",
+                          startYear: "",
+                          endYear: "",
+                        })
+                      }
                       sx={{ mb: 2 }}
                     >
                       Add one more degree
@@ -226,7 +329,12 @@ export default function Profile() {
                 )}
               </FieldArray>
 
-              <Typography component="h1" variant="h5" gutterBottom sx={{ mt: 4 }}>
+              <Typography
+                component="h1"
+                variant="h5"
+                gutterBottom
+                sx={{ mt: 4 }}
+              >
                 Contact
               </Typography>
               <TextField
@@ -240,8 +348,12 @@ export default function Profile() {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.professionalEmail}
-                error={touched.professionalEmail && Boolean(errors.professionalEmail)}
-                helperText={touched.professionalEmail && errors.professionalEmail}
+                error={
+                  touched.professionalEmail && Boolean(errors.professionalEmail)
+                }
+                helperText={
+                  touched.professionalEmail && errors.professionalEmail
+                }
               />
               <TextField
                 variant="outlined"
@@ -259,11 +371,15 @@ export default function Profile() {
               />
 
               {errors.submit && (
-                <Typography color="error" variant="body2" align="center" sx={{ mt: 2 }}>
+                <Typography
+                  color="error"
+                  variant="body2"
+                  align="center"
+                  sx={{ mt: 2 }}
+                >
                   {errors.submit}
                 </Typography>
               )}
-
               <Button
                 type="submit"
                 fullWidth
