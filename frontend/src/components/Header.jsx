@@ -14,7 +14,7 @@ import { Circle } from "@mui/icons-material";
 
 const Header = () => {
   const { subdomainData, user, userData } = useSubdomain();
-  const complete = (userData.institution ? userData.institution.length : false > 0 && userData.position ? userData.position.length > 0 : false)
+  const complete = (userData ? userData.institution.length : false > 0 && userData.position ? userData.position.length > 0 : false)
 
   const navigate = useNavigate()
   return (

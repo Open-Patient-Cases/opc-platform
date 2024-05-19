@@ -1,5 +1,5 @@
 import { fetchCaseByCaseId } from "../utils/firebase";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import {
@@ -27,7 +27,6 @@ export default function Case() {
 
     const { id } = useParams();
     const [caseDetails, setCaseDetails] = useState(null);
-    const [loading, setLoading] = useState(true);
 
     // TODO 
     // Fetch case details using the case ID from URL params
@@ -38,8 +37,6 @@ export default function Case() {
             setCaseDetails(data);
         } catch (error) {
             console.error("Error fetching case data:", error);
-        } finally {
-            setLoading(false); // Set loading to false after data is fetched
         }
     };
 
