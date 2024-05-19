@@ -30,8 +30,6 @@ const validationSchema = Yup.object().shape({
       Yup.object().shape({
         university: Yup.string(),
         specialty: Yup.string(),
-        startYear: Yup.string(),
-        endYear: Yup.string(),
       })
     )
     .min(1, "At least one degree is required"),
@@ -46,7 +44,7 @@ export default function Profile() {
     institution: "",
     position: "",
     linkedin: "",
-    degrees: [{ university: "", specialty: "", startMonth: "", startYear: "" }],
+    degrees: [{ university: "", specialty: ""}],
     professionalEmail: "",
     phoneNumber: "",
   });
@@ -266,52 +264,6 @@ export default function Profile() {
                             errors.degrees?.[index]?.specialty
                           }
                         />
-                        <Grid container spacing={2}>
-                          <Grid item xs={6}>
-                            <TextField
-                              variant="outlined"
-                              margin="normal"
-                              fullWidth
-                              id={`degrees.${index}.startYear`}
-                              label="Start Year"
-                              name={`degrees[${index}].startYear`}
-                              autoComplete="startYear"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={degree.startYear}
-                              error={
-                                touched.degrees?.[index]?.startYear &&
-                                Boolean(errors.degrees?.[index]?.startYear)
-                              }
-                              helperText={
-                                touched.degrees?.[index]?.startYear &&
-                                errors.degrees?.[index]?.startYear
-                              }
-                            />
-                          </Grid>
-                          <Grid item xs={6}>
-                            <TextField
-                              variant="outlined"
-                              margin="normal"
-                              fullWidth
-                              id={`degrees.${index}.endYear`}
-                              label="End Year"
-                              name={`degrees[${index}].endYear`}
-                              autoComplete="endYear"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={degree.endYear}
-                              error={
-                                touched.degrees?.[index]?.endYear &&
-                                Boolean(errors.degrees?.[index]?.endYear)
-                              }
-                              helperText={
-                                touched.degrees?.[index]?.endYear &&
-                                errors.degrees?.[index]?.endYear
-                              }
-                            />
-                          </Grid>
-                        </Grid>
                       </Box>
                     ))}
                     <Button
@@ -323,8 +275,6 @@ export default function Profile() {
                         push({
                           university: "",
                           specialty: "",
-                          startYear: "",
-                          endYear: "",
                         })
                       }
                       sx={{ mb: 2 }}
