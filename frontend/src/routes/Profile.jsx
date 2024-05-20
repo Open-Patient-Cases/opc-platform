@@ -68,7 +68,7 @@ export default function Profile() {
     }
   }, [userData]);
 
-  const complete = userData.institution
+  const complete = userData
     ? userData.institution.length
     : false > 0 && userData.position
     ? userData.position.length > 0
